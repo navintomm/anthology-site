@@ -119,13 +119,48 @@ function AdaptationBalance() {
                 }
             });
 
+            // Cinematic Camera: zoom on scroll
+            gsap.to('.lush-bg', {
+                scale: 1.1,
+                scrollTrigger: {
+                    trigger: scene,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                }
+            });
+
         }, sceneRef);
 
-        return () => ctx.revert();
+        const handleMouseMove = (e) => {
+            // Foliage interaction: cursor makes nearby plants shiver
+            const plants = document.querySelectorAll('.greenery');
+            plants.forEach(plant => {
+                const rect = plant.getBoundingClientRect();
+                const dist = Math.sqrt(Math.pow(e.clientX - rect.left, 2) + Math.pow(e.clientY - rect.top, 2));
+                if (dist < 150) {
+                    gsap.to(plant, {
+                        rotate: '+=10',
+                        duration: 0.2,
+                        ease: 'power2.out',
+                        overwrite: 'auto'
+                    });
+                }
+            });
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => {
+            ctx.revert();
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
     }, []);
 
     return (
-        <section ref={sceneRef} className="scene adaptation-balance">
+        <section
+            ref={sceneRef}
+            className="scene adaptation-balance"
+        >
             {/* Background layers */}
             <div className="scene-bg">
                 {/* Background Image Layer */}

@@ -77,14 +77,23 @@ function Conclusion() {
                 }
             });
 
-            // Final fade to calm
-            gsap.to(scene, {
-                background: 'linear-gradient(180deg, #0d0f12 0%, #1a1f28 100%)',
+            // Ambient motion: Sunset Sky hue shift
+            gsap.to('.calm-sky', {
+                filter: 'hue-rotate(15deg) brightness(1.1)',
+                duration: 20,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut'
+            });
+
+            // Final zoom on closing symbol
+            gsap.to('.closing-symbol', {
+                scale: 1.5,
                 scrollTrigger: {
-                    trigger: scene,
-                    start: 'top center',
+                    trigger: '.closing-symbol',
+                    start: 'top bottom',
                     end: 'bottom center',
-                    scrub: 2
+                    scrub: 1
                 }
             });
 

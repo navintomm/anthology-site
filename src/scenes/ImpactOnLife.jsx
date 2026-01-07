@@ -98,13 +98,13 @@ function ImpactOnLife() {
                 }
             });
 
-            // Fact cards stagger
+            // Fact cards stagger (Premium Slide Up)
             gsap.from('.clickable-fact', {
-                scale: 0,
+                y: 50,
                 opacity: 0,
-                duration: 0.8,
+                duration: 1,
                 stagger: 0.2,
-                ease: 'back.out(1.7)',
+                ease: 'power3.out',
                 scrollTrigger: {
                     trigger: scene,
                     start: 'top 50%',
@@ -149,8 +149,30 @@ function ImpactOnLife() {
                     <div className="person-body"></div>
                 </div>
 
-                {/* Rain effect */}
-                <div className="rain-overlay"></div>
+                {/* Rain effect - now handled globally, but we keep a local subtle overlay for depth */}
+                <div className="rain-overlay local-rain"></div>
+
+                {/* Interaction Layer for Ripples */}
+                <div
+                    className="interaction-layer"
+                    onMouseMove={(e) => {
+                        // Create ripple logic here or just visual feedback
+                        // Simple ripple via class toggle or quick dom append is complex in React without state,
+                        // GSAP quickSetter is better.
+                        const ripple = document.createElement('div');
+                        ripple.className = 'ripple-effect';
+                        ripple.style.left = `${e.nativeEvent.offsetX}px`;
+                        ripple.style.top = `${e.nativeEvent.offsetY}px`;
+                        e.currentTarget.appendChild(ripple);
+
+                        gsap.to(ripple, {
+                            scale: 4,
+                            opacity: 0,
+                            duration: 1,
+                            onComplete: () => ripple.remove()
+                        });
+                    }}
+                ></div>
             </div>
 
             {/* Content */}

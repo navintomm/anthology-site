@@ -77,9 +77,37 @@ function BeforeMonsoon() {
                 }
             });
 
+            // Cinematic Camera: zoom on scroll
+            gsap.to('.dry-earth-bg', {
+                scale: 1.15,
+                scrollTrigger: {
+                    trigger: scene,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                }
+            });
+
         }, sceneRef);
 
-        return () => ctx.revert();
+        const handleMouseMove = (e) => {
+            // Subtle heat drift based on cursor
+            const xOffset = (e.clientX / window.innerWidth - 0.5) * 40;
+            const yOffset = (e.clientY / window.innerHeight - 0.5) * 40;
+
+            gsap.to(heatWaveRef.current, {
+                x: xOffset,
+                y: yOffset,
+                duration: 2,
+                ease: 'power2.out'
+            });
+        };
+
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => {
+            ctx.revert();
+            window.removeEventListener('mousemove', handleMouseMove);
+        };
     }, []);
 
     return (

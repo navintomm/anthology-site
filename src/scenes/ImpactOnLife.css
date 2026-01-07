@@ -143,11 +143,50 @@
 .rain-overlay {
     position: absolute;
     inset: 0;
-    background-image: url('data:image/svg+xml;base64,PHN2ZyB...');
-    /* Inline SVG or just CSS gradient could work, but using opacity for now */
-    /* Or use simple CSS rain */
-    z-index: 4;
     pointer-events: none;
+    z-index: 4;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0) 100%);
+    background-size: 1px 20px;
+    opacity: 0.2;
+    animation: rain-fall 0.4s linear infinite;
+}
+
+@keyframes rain-fall {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: 0 20px;
+    }
+}
+
+/* Interaction Ripples */
+.interaction-layer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    /* Only interacting with the "water" or bottom part */
+    z-index: 20;
+    cursor: url('data:image/svg+xml;utf8,<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="10" stroke="white" stroke-width="2"/></svg>') 12 12, auto;
+}
+
+.ripple-effect {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+}
+
+/* Local rain modification */
+.local-rain {
+    /* Lower opacity so it blends with global rain */
+    opacity: 0.1 !important;
 }
 
 /* Responsive */

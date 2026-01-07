@@ -9,6 +9,8 @@ import ImpactOnLife from './scenes/ImpactOnLife';
 import AdaptationBalance from './scenes/AdaptationBalance';
 import Conclusion from './scenes/Conclusion';
 import Navigation from './components/Navigation';
+import AtmosphereController from './components/AtmosphereController';
+import ProgressBar from './components/ProgressBar';
 import './App.css';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -61,6 +63,18 @@ function App() {
         });
       });
 
+      // Hero Title Zoom on scroll
+      gsap.to('.hero-header', {
+        scale: 0.8,
+        opacity: 0,
+        y: -150,
+        scrollTrigger: {
+          trigger: '.hero-header',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true
+        }
+      });
     });
 
     return () => ctx.revert();
@@ -69,6 +83,7 @@ function App() {
   return (
     <div className="app">
       <Navigation />
+      <ProgressBar />
 
       {/* Hero Title Card */}
       <header className="hero-header">
@@ -109,6 +124,9 @@ function App() {
         <p>An Interactive Storytelling Experience</p>
         <p className="credits-subtext">Scroll-driven • Cinematic • Immersive</p>
       </footer>
+
+      {/* Global Atmosphere Effects */}
+      <AtmosphereController />
     </div>
   );
 }

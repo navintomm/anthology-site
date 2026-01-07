@@ -19,7 +19,7 @@ function MonsoonRailways() {
             const scene = sceneRef.current; // ... existing code ...
 
 
-            // Train movement controlled by scroll
+            // Train movement & Storm effects
             gsap.to(trainRef.current, {
                 x: 800,
                 ease: 'none',
@@ -29,13 +29,31 @@ function MonsoonRailways() {
                     end: 'bottom top',
                     scrub: 1,
                     onUpdate: (self) => {
-                        // Update train speed based on scroll velocity
-                        const velocity = Math.abs(self.getVelocity() / 100);
-                        setTrainSpeed(Math.min(velocity, 30));
+                        const velocity = self.getVelocity();
+                        const speed = Math.abs(velocity / 100);
 
-                        // Control rain intensity
+                        // Update train speed
+                        setTrainSpeed(Math.min(speed, 30));
+
+                        // Storm Intensity: Slant rain based on scroll direction & speed
+                        const isScrollingDown = self.direction > 0;
+                        const slant = Math.min(Math.abs(velocity / 40), 30) * (isScrollingDown ? -1 : 1);
+
                         if (rainContainerRef.current) {
-                            rainContainerRef.current.style.opacity = 0.4 + (self.progress * 0.4);
+                            gsap.to(rainContainerRef.current, {
+                                skewX: slant,
+                                opacity: 0.4 + (self.progress * 0.5), // More rain as we go deep
+                                duration: 0.2,
+                                ease: 'power1.out'
+                            });
+                        }
+
+                        // LIGHTNING: Trigger flash if scrolling very fast
+                        if (speed > 15 && Math.random() > 0.95) {
+                            const flash = document.querySelector('.lightning-flash');
+                            if (flash) {
+                                gsap.to(flash, { opacity: 0.8, duration: 0.1, yoyo: true, repeat: 1 });
+                            }
                         }
                     }
                 }
@@ -107,8 +125,44 @@ function MonsoonRailways() {
 
         }, sceneRef);
 
+        // Continuous chugging animation
+        gsap.to(trainRef.current, {
+            y: "-=5",
+            duration: 0.1,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+        });
+
         return () => ctx.revert();
     }, []);
+
+    const handleMouseMove = (e) => {
+        // Influence headlight glow based on cursor proximity
+        if (!headlightRef.current) return;
+        const rect = headlightRef.current.getBoundingClientRect();
+        const dx = e.clientX - (rect.left + rect.width / 2);
+        const dy = e.clientY - (rect.top + rect.height / 2);
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        const intensity = Math.max(0.8, 2 - dist / 300);
+        gsap.to(headlightRef.current, {
+            scale: intensity * 1.2,
+            opacity: Math.min(intensity, 1),
+            duration: 0.3
+        });
+    };
+
+    const handleSceneClick = () => {
+        // Clicking triggers a cinematic lightning flash locally too
+        const flash = document.querySelector('.lightning-flash');
+        if (flash) {
+            gsap.fromTo(flash,
+                { opacity: 1 },
+                { opacity: 0, duration: 0.4, ease: "power2.in" }
+            );
+        }
+    };
 
     // Generate rain
     const raindrops = Array.from({ length: 80 }, (_, i) => ({
@@ -119,9 +173,15 @@ function MonsoonRailways() {
     }));
 
     return (
-        <section ref={sceneRef} className="scene monsoon-railways">
+        <section
+            ref={sceneRef}
+            className="scene monsoon-railways"
+            onMouseMove={handleMouseMove}
+            onClick={handleSceneClick}
+        >
             {/* Background layers */}
             <div className="scene-bg">
+                <div className="lightning-flash"></div>
                 <div
                     className="parallax-layer railway-background-img"
                     data-speed="0.3"

@@ -24,21 +24,46 @@ function FirstRain() {
     }, []);
 
     useEffect(() => {
+        // Auto-ripples for "Always Alive" feeling
+        const interval = setInterval(() => {
+            if (Math.random() > 0.7) { // Random chance
+                const x = 20 + Math.random() * 60; // Keep somewhat central
+                const y = 20 + Math.random() * 60;
+                createRipple(x, y);
+            }
+        }, 800);
+        return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
         const ctx = gsap.context(() => {
             const scene = sceneRef.current;
 
-            // Increase rain density based on scroll
+            // Scroll Control: Speed -> Wind/Intensity
             ScrollTrigger.create({
                 trigger: scene,
-                start: 'top center',
-                end: 'bottom center',
+                start: 'top bottom',
+                end: 'bottom top',
                 onUpdate: (self) => {
-                    const intensity = self.progress;
+                    const velocity = self.getVelocity();
+                    const isScrollingDown = self.direction > 0;
+
+                    // Wind effect based on scroll speed (max slant 20deg)
+                    const slant = Math.min(Math.abs(velocity / 50), 20) * (isScrollingDown ? -1 : 1);
+
                     if (rainContainerRef.current) {
-                        rainContainerRef.current.style.opacity = 0.3 + (intensity * 0.5);
+                        // Intensity based on progress
+                        const opacity = 0.3 + (self.progress * 0.6);
+
+                        // Apply transforms
+                        gsap.to(rainContainerRef.current, {
+                            skewX: slant,
+                            opacity: opacity,
+                            duration: 0.5,
+                            ease: 'power1.out'
+                        });
                     }
-                },
-                scrub: true
+                }
             });
 
             // Text animations
@@ -72,24 +97,50 @@ function FirstRain() {
         return () => ctx.revert();
     }, []);
 
-    const handleMouseMove = (e) => {
-        // Intensify rain locally on hover
-        const rect = sceneRef.current.getBoundingClientRect();
-        const x = ((e.clientX - rect.left) / rect.width) * 100;
-        const y = ((e.clientY - rect.top) / rect.height) * 100;
-
-        // Create ripple at hover position
+    const createRipple = (x, y) => {
         const newRipple = {
-            id: Date.now(),
+            id: Date.now() + Math.random(),
             x,
             y
         };
         setRipples(prev => [...prev, newRipple]);
 
-        // Remove ripple after animation
         setTimeout(() => {
             setRipples(prev => prev.filter(r => r.id !== newRipple.id));
         }, 1500);
+    };
+
+    const handleMouseMove = (e) => {
+        const rect = sceneRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        // Interaction: Create ripple
+        createRipple(x, y);
+
+        // Cinematic Camera: zoom on scroll
+        gsap.to('.rain-background', {
+            scale: 1.1,
+            scrollTrigger: {
+                trigger: scene,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1
+            }
+        });
+    };
+
+    const handleSceneClick = (e) => {
+        const rect = sceneRef.current.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+        // Big splash on click
+        createRipple(x, y);
+
+        // Trigger a "Thunder flash" from the atmosphere controller indirectly
+        // by dispatching a global click or something similar. 
+        // Our AtmosphereController already listens to 'window click'.
     };
 
     return (
@@ -97,6 +148,7 @@ function FirstRain() {
             ref={sceneRef}
             className="scene first-rain"
             onMouseMove={handleMouseMove}
+            onClick={handleSceneClick}
         >
             {/* Background layers */}
             <div className="scene-bg">

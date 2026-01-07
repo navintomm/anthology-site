@@ -139,27 +139,7 @@
    UI ELEMENTS (Progress, Fixed)
    =========================== */
 
-/* Fixed Progress Bar on Right */
-.progress-container {
-    position: fixed;
-    right: 2vw;
-    top: 50%;
-    transform: translateY(-50%);
-    height: 20vh;
-    width: 2px;
-    background: rgba(255, 255, 255, 0.05);
-    z-index: 9999;
-    border-radius: 2px;
-    mix-blend-mode: exclusion;
-}
 
-.progress-bar {
-    width: 100%;
-    background: #fff;
-    border-radius: 2px;
-    height: 0%;
-    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
-}
 
 /* ===========================
    CREDITS - Minimal

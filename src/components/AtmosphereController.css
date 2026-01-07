@@ -1,0 +1,15 @@
+/* Custom Cursor Glow */
+.custom-cursor-glow {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    /* Centered on mouse */
+    z-index: 8000;
+    mix-blend-mode: screen;
+}

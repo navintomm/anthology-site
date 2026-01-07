@@ -12,6 +12,19 @@ function ArrivalOfClouds() {
     const [lightningVisible, setLightningVisible] = useState(false);
 
     useEffect(() => {
+        // Ambient Motion: Clouds drifting continuously
+        cloudsRef.current.forEach((cloud, index) => {
+            if (!cloud) return;
+            // Drifting left or right endlessly
+            gsap.to(cloud, {
+                x: (index % 2 === 0 ? 50 : -50),
+                duration: 20 + (index * 5),
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut'
+            });
+        });
+
         const ctx = gsap.context(() => {
             const scene = sceneRef.current;
 
@@ -69,10 +82,35 @@ function ArrivalOfClouds() {
                 }
             });
 
+            // Distant lighting flickering
+            const lights = document.querySelectorAll('.distant-light');
+            lights.forEach(light => {
+                gsap.to(light, {
+                    opacity: '+=0.4',
+                    duration: 'random(0.1, 0.5)',
+                    repeat: -1,
+                    yoyo: true,
+                    repeatDelay: 'random(1, 5)',
+                    ease: 'none'
+                });
+            });
+
+            // Cinematic Zoom on scroll
+            gsap.to('.storm-clouds-bg', {
+                scale: 1.2,
+                scrollTrigger: {
+                    trigger: scene,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                }
+            });
+
             // Text animations
             gsap.from('.clouds-title', {
                 y: 80,
                 opacity: 0,
+                scale: 0.9,
                 duration: 1.5,
                 ease: 'power3.out',
                 scrollTrigger: {
@@ -128,12 +166,20 @@ function ArrivalOfClouds() {
                     style={{ backgroundImage: `url(${stormCloudsImg})` }}
                 ></div>
 
+                {/* Fog Layer */}
+                <div className="fog-layer"></div>
+
                 {/* Cloud layers - multiple independent elements */}
                 <div ref={el => cloudsRef.current[0] = el} className="cloud cloud-1" data-speed="0.4"></div>
                 <div ref={el => cloudsRef.current[1] = el} className="cloud cloud-2" data-speed="0.5"></div>
                 <div ref={el => cloudsRef.current[2] = el} className="cloud cloud-3" data-speed="0.6"></div>
                 <div ref={el => cloudsRef.current[3] = el} className="cloud cloud-4" data-speed="0.7"></div>
                 <div ref={el => cloudsRef.current[4] = el} className="cloud cloud-5" data-speed="0.8"></div>
+
+                {/* Distant flickering lights */}
+                <div className="distant-light light-1"></div>
+                <div className="distant-light light-2"></div>
+                <div className="distant-light light-3"></div>
 
                 {/* Lightning flash overlay */}
                 <div
@@ -151,6 +197,9 @@ function ArrivalOfClouds() {
                     The sky transforms from warm amber to deep indigo. Lightning cracks
                     through the heavens, announcing the imminent arrival of the monsoon.
                 </p>
+                <div onClick={triggerLightning} style={{ cursor: 'pointer', marginTop: '1rem', display: 'inline-block' }}>
+                    <p className="interaction-hint">Click for Lightning ⚡</p>
+                </div>
             </div>
         </section>
     );
