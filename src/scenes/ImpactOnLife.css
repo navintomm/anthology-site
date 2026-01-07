@@ -1,0 +1,171 @@
+.impact-life {
+    background: linear-gradient(180deg, var(--midnight-blue) 0%, var(--storm-gray) 100%);
+    position: relative;
+    min-height: 150vh;
+    overflow: hidden;
+}
+
+/* Background Image */
+.impact-bg {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    mix-blend-mode: luminosity;
+    /* Keeps the blue theme intact */
+    filter: contrast(1.1) brightness(0.6) blur(2px);
+}
+
+/* Water Level */
+.water-level {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 20%;
+    background: linear-gradient(180deg,
+            rgba(74, 123, 167, 0.2) 0%,
+            rgba(61, 90, 128, 0.4) 50%,
+            rgba(74, 123, 167, 0.6) 100%);
+    border-top: 1px solid rgba(170, 187, 209, 0.3);
+    will-change: height;
+    pointer-events: none;
+    backdrop-filter: blur(5px);
+    z-index: 2;
+}
+
+/* Facts Container - Cinematic Layout */
+.facts-container {
+    position: relative;
+    margin-top: 6rem;
+    height: 60vh;
+    width: 100%;
+    z-index: 10;
+}
+
+.clickable-fact {
+    position: absolute;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border: var(--glass-border);
+    border-radius: 4px;
+    padding: 2rem;
+    min-width: 280px;
+    max-width: 320px;
+    cursor: pointer;
+    transition: all 0.5s var(--cinematic-fade);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.clickable-fact:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: var(--text-primary);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    background: rgba(20, 25, 35, 0.8);
+}
+
+.fact-title {
+    font-family: var(--font-hero);
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.fact-content {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fade-in-up 0.5s ease-out;
+}
+
+.fact-icon {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    font-size: 1.2rem;
+    color: var(--mist-blue);
+    font-weight: 300;
+    transition: transform 0.3s ease;
+}
+
+.clickable-fact:hover .fact-icon {
+    transform: rotate(90deg);
+    color: var(--text-primary);
+}
+
+/* Person & Rain Styling */
+.person {
+    position: absolute;
+    width: 50px;
+    height: 90px;
+    will-change: transform;
+    pointer-events: none;
+    opacity: 0.8;
+    z-index: 3;
+}
+
+.umbrella {
+    width: 70px;
+    height: 35px;
+    background: radial-gradient(at top, #c0392b 0%, #7b241c 100%);
+    border-radius: 50% 50% 0 0;
+    position: relative;
+    margin-left: -10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+
+.person-1 {
+    left: 15%;
+    bottom: 30%;
+}
+
+.person-2 {
+    right: 20%;
+    bottom: 35%;
+}
+
+.person-3 {
+    left: 55%;
+    bottom: 28%;
+}
+
+/* Rain Overlay */
+.rain-overlay {
+    position: absolute;
+    inset: 0;
+    background-image: url('data:image/svg+xml;base64,PHN2ZyB...');
+    /* Inline SVG or just CSS gradient could work, but using opacity for now */
+    /* Or use simple CSS rain */
+    z-index: 4;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .facts-container {
+        height: auto;
+        position: static;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .clickable-fact {
+        position: relative !important;
+        max-width: 100%;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+    }
+}

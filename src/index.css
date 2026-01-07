@@ -1,0 +1,278 @@
+/* ===========================
+   MONSOON IN INDIA - CINEMATIC DESIGN SYSTEM
+   =========================== */
+
+/* Import Premium Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Manrope:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap');
+
+:root {
+  /* Cinematic Color Palette */
+  --void-black: #050505;
+  --deep-charcoal: #0a0b0e;
+  --midnight-blue: #0f131a;
+  --storm-gray: #1f242b;
+
+  /* Atmospheric Tones */
+  --mist-blue: #aabbd1;
+  --rain-glass: rgba(170, 187, 209, 0.1);
+  --amber-glow: rgba(255, 160, 60, 0.6);
+  --cyan-haze: rgba(100, 200, 220, 0.3);
+
+  /* Text Colors */
+  --text-primary: #e0e6ed;
+  --text-secondary: #94a3b8;
+  --text-muted: #4b5563;
+
+  /* Typography */
+  --font-hero: 'Cinzel', serif;
+  /* For massive headlines */
+  --font-body: 'Manrope', sans-serif;
+  /* Clean, modern sans-serif */
+  --font-accent: 'Cormorant Garamond', serif;
+  /* For emotive italics */
+
+  /* Spacing */
+  --scene-height: 100vh;
+  --content-width: 1400px;
+
+  /* Effects */
+  --glass-blur: blur(20px);
+  --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+  --glass-bg: rgba(10, 11, 14, 0.6);
+  --soft-glow: 0 0 40px rgba(100, 200, 220, 0.15);
+  --cinematic-fade: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Custom easing */
+}
+
+/* ===========================
+   RESET & BASE STRUCTURE
+   =========================== */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--void-black);
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--deep-charcoal);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hide Scrollbar for Immersion */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--deep-charcoal);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--storm-gray);
+  border-radius: 2px;
+}
+
+/* ===========================
+   CINEMATIC TYPOGRAPHY
+   =========================== */
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-hero);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.scene-title {
+  font-size: clamp(3.5rem, 6vw, 8rem);
+  line-height: 1.1;
+  margin-bottom: 2rem;
+  background: linear-gradient(180deg, #fff 0%, #aabbd1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: 0.95;
+  filter: drop-shadow(0 0 30px rgba(170, 187, 209, 0.2));
+}
+
+.story-text {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.2vw, 1.15rem);
+  font-weight: 300;
+  color: var(--text-secondary);
+  max-width: 600px;
+  /* Narrow columns for readability */
+  line-height: 1.9;
+  letter-spacing: 0.02em;
+  margin-bottom: 2rem;
+}
+
+/* ===========================
+   IMMERSIVE LAYOUT
+   =========================== */
+
+.scene {
+  position: relative;
+  height: 100vh;
+  /* Full screen always */
+  width: 100%;
+  display: flex;
+  align-items: center;
+  /* Vertically centered */
+  /* Horizontal alignment varies per scene (center, left, right) */
+  justify-content: center;
+  padding: 0 4vw;
+  overflow: hidden;
+  isolation: isolate;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+  /* Subtle divider */
+}
+
+/* Cinematic Container */
+.scene-content {
+  position: relative;
+  z-index: 10;
+  max-width: var(--content-width);
+  width: 100%;
+  padding: 2rem;
+  will-change: opacity, transform;
+}
+
+.align-left {
+  text-align: left;
+  align-items: flex-start;
+}
+
+.align-center {
+  text-align: center;
+  align-items: center;
+}
+
+.align-right {
+  text-align: right;
+  align-items: flex-end;
+}
+
+/* ===========================
+   GLASS UI COMPONENTS
+   =========================== */
+
+/* Background Overlay for Depth */
+.scene-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Floating Glass Cards */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: var(--glass-border);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  padding: 2.5rem;
+  border-radius: 4px;
+  /* Sharper corners for modern look */
+  transition: transform 0.6s var(--cinematic-fade), box-shadow 0.6s var(--cinematic-fade);
+}
+
+.glass-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--soft-glow);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Minimal Buttons */
+.btn-minimal {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  padding: 1rem 2rem;
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.4s ease;
+}
+
+.btn-minimal:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--text-primary);
+  letter-spacing: 0.25em;
+}
+
+/* ===========================
+   GLOBAL ATMOSPHERE
+   =========================== */
+
+/* Global noise for film texture */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url('data:image/svg+xml;utf8,%3Csvg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)" opacity="0.05"/%3E%3C/svg%3E');
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.3;
+  mix-blend-mode: overlay;
+}
+
+/* Vignette */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(5, 5, 5, 0.8) 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ===========================
+   RESPONSIVE BASE STYLES
+   =========================== */
+
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+    /* Reduce base size */
+  }
+
+  .scene {
+    padding: 0 1.5rem;
+    /* Less padding on sides */
+  }
+
+  .scene-content {
+    padding: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .scene-title {
+    font-size: clamp(2.5rem, 8vw, 4rem);
+    /* Smaller titles */
+    margin-bottom: 1rem;
+    line-height: 1.2;
+  }
+
+  .story-text {
+    font-size: 1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+}

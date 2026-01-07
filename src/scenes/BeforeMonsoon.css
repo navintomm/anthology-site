@@ -1,0 +1,64 @@
+.before-monsoon {
+    background: linear-gradient(180deg, #1a120b 0%, #2c1a16 100%);
+    /* Deep scorched earth tone */
+    position: relative;
+}
+
+/* Dry Earth Image Layer */
+.dry-earth-bg {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    filter: contrast(1.2) brightness(0.8) sepia(0.3);
+}
+
+/* Cinematic Content Box */
+.scene-content {
+    text-align: center;
+    max-width: 800px;
+    /* Constrained for reading */
+}
+
+/* Heat Distortion - Subtle */
+.heat-wave {
+    background: linear-gradient(180deg,
+            transparent 0%,
+            rgba(255, 140, 0, 0.05) 40%,
+            rgba(255, 140, 0, 0.02) 60%,
+            transparent 100%);
+    filter: blur(40px);
+    mix-blend-mode: screen;
+}
+
+/* Crack Overlay - Darker, sharper */
+.crack-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0.6;
+}
+
+.crack-line {
+    stroke: rgba(10, 5, 2, 0.6);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.05));
+    /* Subtle depth highlight */
+}
+
+/* Text Overrides for this scene */
+.before-title {
+    /* Use Amber glow for this specific warm scene */
+    background: linear-gradient(180deg, #ffcc80 0%, #ef6c00 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(239, 108, 0, 0.3));
+}

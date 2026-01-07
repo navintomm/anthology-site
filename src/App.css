@@ -1,0 +1,179 @@
+.app {
+    position: relative;
+    width: 100%;
+    overflow-x: hidden;
+    background: var(--deep-charcoal);
+    color: var(--text-primary);
+}
+
+/* ===========================
+   HERO HEADER - Cinematic
+   =========================== */
+
+.hero-header {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Center horizontally */
+    justify-content: center;
+    /* Center vertically */
+    position: relative;
+    overflow: hidden;
+    z-index: 10;
+}
+
+/* Subtle Hero Glow Background */
+.hero-header::before {
+    content: '';
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    background: radial-gradient(circle, var(--cyan-haze) 0%, transparent 60%);
+    filter: blur(100px);
+    opacity: 0.2;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+    animation: pulse-glow 10s infinite alternate;
+}
+
+.main-title {
+    font-size: clamp(4rem, 10vw, 12rem);
+    /* Massive scale */
+    font-weight: 400;
+    /* Thinner weights look more premium */
+    letter-spacing: 0.15em;
+    margin: 0;
+    color: var(--text-primary);
+    text-align: center;
+    opacity: 0;
+    animation: fade-in-up 2s var(--cinematic-fade) forwards 0.5s;
+}
+
+.main-subtitle {
+    font-family: var(--font-accent);
+    font-size: clamp(1.2rem, 2vw, 2rem);
+    font-style: italic;
+    font-weight: 300;
+    color: var(--mist-blue);
+    margin-top: 1.5rem;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    animation: fade-in-up 2s var(--cinematic-fade) forwards 1s;
+}
+
+/* Minimal Scroll Indicator */
+.scroll-indicator {
+    position: absolute;
+    bottom: 8vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    opacity: 0;
+    animation: fade-in 2s ease forwards 2s;
+}
+
+.scroll-text {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+/* Thin line indicator instead of arrow */
+.scroll-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, var(--text-secondary), transparent);
+    position: relative;
+    overflow: hidden;
+}
+
+.scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: var(--text-primary);
+    animation: drop-line 2s cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+
+@keyframes drop-line {
+    0% {
+        transform: translateY(-100%);
+    }
+
+    100% {
+        transform: translateY(250%);
+    }
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fade-in {
+    to {
+        opacity: 1;
+    }
+}
+
+/* ===========================
+   UI ELEMENTS (Progress, Fixed)
+   =========================== */
+
+/* Fixed Progress Bar on Right */
+.progress-container {
+    position: fixed;
+    right: 2vw;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 20vh;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 9999;
+    border-radius: 2px;
+    mix-blend-mode: exclusion;
+}
+
+.progress-bar {
+    width: 100%;
+    background: #fff;
+    border-radius: 2px;
+    height: 0%;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+}
+
+/* ===========================
+   CREDITS - Minimal
+   =========================== */
+
+.credits {
+    padding: 8rem 0;
+    text-align: center;
+    border-top: 1px solid rgba(255, 255, 255, 0.03);
+    background: var(--void-black);
+}
+
+.credits p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+}

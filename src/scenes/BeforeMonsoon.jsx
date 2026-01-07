@@ -1,0 +1,146 @@
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import './BeforeMonsoon.css';
+
+import dryEarthImg from '../assets/dry_earth.png';
+
+function BeforeMonsoon() {
+    const sceneRef = useRef(null);
+    const cracksRef = useRef([]);
+    const heatWaveRef = useRef(null);
+
+    useEffect(() => {
+        const ctx = gsap.context(() => {
+            const scene = sceneRef.current;
+
+            // Heat distortion effect
+            gsap.to(heatWaveRef.current, {
+                y: -20,
+                opacity: 0.6,
+                duration: 3,
+                ease: 'sine.inOut',
+                repeat: -1,
+                yoyo: true
+            });
+
+            // Crack lines appear on scroll
+            cracksRef.current.forEach((crack, index) => {
+                gsap.from(crack, {
+                    scaleX: 0,
+                    opacity: 0,
+                    duration: 1.5,
+                    delay: index * 0.2,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: scene,
+                        start: 'top 70%',
+                        toggleActions: 'play none none reverse'
+                    }
+                });
+            });
+
+            // Color transition as user scrolls
+            gsap.to(scene, {
+                background: 'linear-gradient(180deg, #3e2723 0%, #4e342e 100%)',
+                scrollTrigger: {
+                    trigger: scene,
+                    start: 'top center',
+                    end: 'bottom center',
+                    scrub: 1
+                }
+            });
+
+            // Text animations
+            gsap.from('.before-title', {
+                y: 60,
+                opacity: 0,
+                duration: 1.2,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: scene,
+                    start: 'top 60%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+            gsap.from('.before-text', {
+                y: 40,
+                opacity: 0,
+                duration: 1,
+                delay: 0.3,
+                ease: 'power2.out',
+                scrollTrigger: {
+                    trigger: scene,
+                    start: 'top 60%',
+                    toggleActions: 'play none none reverse'
+                }
+            });
+
+        }, sceneRef);
+
+        return () => ctx.revert();
+    }, []);
+
+    return (
+        <section ref={sceneRef} className="scene before-monsoon">
+            {/* Background layers */}
+            <div className="scene-bg">
+                <div
+                    className="parallax-layer dry-earth-bg"
+                    data-speed="0.2"
+                    style={{ backgroundImage: `url(${dryEarthImg})` }}
+                ></div>
+                <div className="parallax-layer heat-wave" ref={heatWaveRef}></div>
+
+                {/* Crack lines */}
+                <svg className="crack-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+                    <path
+                        ref={el => cracksRef.current[0] = el}
+                        className="crack-line"
+                        d="M 200,300 Q 250,350 300,320 T 450,340 L 550,380"
+                        stroke="rgba(62, 39, 35, 0.8)"
+                        strokeWidth="2"
+                        fill="none"
+                    />
+                    <path
+                        ref={el => cracksRef.current[1] = el}
+                        className="crack-line"
+                        d="M 600,400 Q 650,450 720,430 T 850,460"
+                        stroke="rgba(62, 39, 35, 0.8)"
+                        strokeWidth="2"
+                        fill="none"
+                    />
+                    <path
+                        ref={el => cracksRef.current[2] = el}
+                        className="crack-line"
+                        d="M 100,600 Q 180,650 250,620 T 400,640"
+                        stroke="rgba(62, 39, 35, 0.8)"
+                        strokeWidth="2"
+                        fill="none"
+                    />
+                    <path
+                        ref={el => cracksRef.current[3] = el}
+                        className="crack-line"
+                        d="M 500,700 Q 580,720 650,690 T 800,710"
+                        stroke="rgba(62, 39, 35, 0.8)"
+                        strokeWidth="2"
+                        fill="none"
+                    />
+                </svg>
+            </div>
+
+            {/* Content */}
+            <div className="scene-content">
+                <h2 className="scene-title before-title">Before the Monsoon</h2>
+                <p className="story-text before-text">
+                    The land lies parched beneath an unforgiving sun. Cracked earth stretches endlessly,
+                    waiting, yearning for the first touch of rain. The air shimmers with heat,
+                    and time moves slowly in the silence of anticipation.
+                </p>
+            </div>
+        </section>
+    );
+}
+
+export default BeforeMonsoon;

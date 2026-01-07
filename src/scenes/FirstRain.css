@@ -1,0 +1,135 @@
+.first-rain {
+    background: linear-gradient(180deg, #1a1f28 0%, #2d3541 100%);
+    position: relative;
+    cursor: crosshair;
+}
+
+.rain-background {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.4;
+    mix-blend-mode: overlay;
+    filter: contrast(1.2) brightness(0.8);
+}
+
+/* Rain Container */
+.rain-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
+}
+
+/* Individual Raindrop */
+.raindrop {
+    position: absolute;
+    top: -100px;
+    width: 2px;
+    background: linear-gradient(180deg,
+            transparent 0%,
+            rgba(109, 213, 237, 0.8) 50%,
+            rgba(109, 213, 237, 0.4) 100%);
+    opacity: 0.7;
+    animation: rain-fall linear infinite;
+    filter: blur(0.5px);
+}
+
+@keyframes rain-fall {
+    0% {
+        transform: translateY(0);
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: translateY(100vh);
+        opacity: 0;
+    }
+}
+
+/* Ripples Container */
+.ripples-container {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* Water Ripple Effect */
+.ripple {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 2px solid rgba(109, 213, 237, 0.6);
+    border-radius: 50%;
+    animation: ripple-expand 1.5s ease-out forwards;
+    transform: translate(-50%, -50%);
+}
+
+@keyframes ripple-expand {
+    0% {
+        width: 0;
+        height: 0;
+        opacity: 1;
+        border-width: 3px;
+    }
+
+    50% {
+        opacity: 0.6;
+        border-width: 2px;
+    }
+
+    100% {
+        width: 150px;
+        height: 150px;
+        opacity: 0;
+        border-width: 1px;
+    }
+}
+
+/* Interaction Hint */
+.interaction-hint {
+    font-family: var(--font-story);
+    font-size: 0.9rem;
+    color: rgba(109, 213, 237, 0.6);
+    font-style: italic;
+    margin-top: 2rem;
+    opacity: 0.7;
+    animation: pulse-hint 2s ease-in-out infinite;
+}
+
+@keyframes pulse-hint {
+
+    0%,
+    100% {
+        opacity: 0.5;
+    }
+
+    50% {
+        opacity: 0.9;
+    }
+}
+
+/* Content Styling */
+.rain-title {
+    filter: drop-shadow(0 0 25px rgba(109, 213, 237, 0.6));
+}
+
+.rain-text {
+    text-shadow: 0 4px 16px rgba(0, 0, 0, 0.7);
+}
+
+/* Hover Effect - Intensify Rain */
+.first-rain:hover .rain-container {
+    opacity: 0.6;
+}

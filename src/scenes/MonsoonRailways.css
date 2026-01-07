@@ -1,0 +1,201 @@
+.monsoon-railways {
+    background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Railway Background Image */
+/* Railway Background Image */
+.railway-background-img {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+    mix-blend-mode: normal;
+    filter: contrast(1.1) brightness(0.9);
+}
+
+/* Fog Layer */
+.fog-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(90deg,
+            rgba(200, 210, 220, 0.05) 0%,
+            rgba(200, 210, 220, 0.15) 50%,
+            rgba(200, 210, 220, 0.05) 100%);
+    filter: blur(50px);
+    pointer-events: none;
+}
+
+/* Rain Container */
+.rain-container-railways {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+.raindrop {
+    position: absolute;
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, rgba(173, 216, 230, 0.8));
+    top: -100px;
+    animation: rain-fall 0.8s linear infinite;
+}
+
+.raindrop.heavy {
+    width: 2px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, rgba(200, 230, 255, 0.6));
+}
+
+@keyframes rain-fall {
+    to {
+        transform: translateY(120vh);
+    }
+}
+
+/* Tracks & Reflections */
+.railway-tracks {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 30vh;
+    perspective: 1000px;
+    z-index: 2;
+    opacity: 0.3;
+    /* Subtle tracks */
+}
+
+.track {
+    position: absolute;
+    background: #334155;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.track-1,
+.track-2 {
+    bottom: 0;
+    width: 10px;
+    height: 100%;
+    background: linear-gradient(to bottom, #475569, #0f172a);
+}
+
+.track-1 {
+    left: 30%;
+    transform: rotateX(60deg) skewX(40deg);
+    transform-origin: bottom center;
+}
+
+.track-2 {
+    right: 30%;
+    transform: rotateX(60deg) skewX(-40deg);
+    transform-origin: bottom center;
+}
+
+.track-reflection {
+    position: absolute;
+    bottom: 10%;
+    left: 35%;
+    width: 30%;
+    height: 40%;
+    background: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+    transform: skewX(-20deg);
+    filter: blur(20px);
+}
+
+/* Railway Signal */
+.signal-post {
+    position: absolute;
+    right: 10%;
+    top: 30%;
+    width: 10px;
+    height: 200px;
+    background: #0f172a;
+    z-index: 4;
+}
+
+.signal-light {
+    width: 30px;
+    height: 30px;
+    background: #ef4444;
+    /* Red light blinking */
+    border-radius: 50%;
+    position: absolute;
+    top: 10px;
+    left: -10px;
+    box-shadow: 0 0 20px #ef4444;
+    opacity: 0.5;
+}
+
+/* Train Styling */
+.train {
+    position: absolute;
+    bottom: 15%;
+    left: -400px;
+    /* Start off-screen */
+    width: 600px;
+    height: 180px;
+    z-index: 6;
+    filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.8));
+}
+
+.train-body {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #1e293b, #334155, #1e293b);
+    border-radius: 20px 0 0 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.headlight {
+    position: absolute;
+    top: 40%;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow:
+        0 0 50px rgba(255, 255, 255, 0.8),
+        0 0 100px rgba(255, 255, 255, 0.4),
+        300px 0 200px rgba(255, 255, 255, 0.1);
+    /* Long beam */
+}
+
+.train-window {
+    width: 60px;
+    height: 50px;
+    background: rgba(255, 255, 200, 0.1);
+    /* Warm interior light */
+    position: absolute;
+    top: 30px;
+    border-radius: 4px;
+}
+
+.train-window:nth-child(2) {
+    left: 40px;
+}
+
+.train-window:nth-child(3) {
+    left: 120px;
+}
+
+/* Text Overrides - Metallic */
+.railway-title {
+    background: linear-gradient(180deg, #f8fafc 0%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 15px rgba(148, 163, 184, 0.3));
+}

@@ -1,0 +1,86 @@
+.conclusion {
+    background: linear-gradient(180deg, var(--deep-charcoal) 0%, var(--void-black) 100%);
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calm-sky {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.5;
+    mix-blend-mode: normal;
+    filter: brightness(0.8);
+}
+
+/* Subtle Glass Card for Reflection */
+.reflection-message {
+    background: rgba(5, 5, 5, 0.6);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /* Extremely subtle border */
+    border-radius: 2px;
+    padding: 4rem 6rem;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+    /* Deep shadow for lift */
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+}
+
+.reflection-paragraph {
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    line-height: 2.2;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    letter-spacing: 0.02em;
+}
+
+.closing-symbol {
+    font-size: 2rem;
+    opacity: 0.4;
+    margin-top: 3rem;
+    filter: grayscale(100%) brightness(150%);
+    /* Silvery look */
+    animation: float 6s ease-in-out infinite;
+}
+
+/* Typography refined */
+.conclusion-title {
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.15em;
+    font-size: 4rem;
+}
+
+.conclusion-subtitle {
+    font-family: var(--font-accent);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--text-muted);
+    margin-bottom: 4rem;
+    opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .reflection-message {
+        padding: 2rem;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        backdrop-filter: none;
+    }
+
+    .conclusion-title {
+        font-size: 2.5rem;
+    }
+}

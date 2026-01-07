@@ -1,0 +1,97 @@
+.arrival-clouds {
+    background: var(--midnight-blue);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Storm Clouds Image Layer */
+.storm-clouds-bg {
+    position: absolute;
+    top: -10%;
+    left: 0;
+    width: 100%;
+    height: 120%;
+    background-size: cover;
+    background-position: center bottom;
+    opacity: 0.3;
+    mix-blend-mode: overlay;
+    filter: contrast(1.1) brightness(0.6) hue-rotate(10deg);
+}
+
+/* Clouds Styling */
+.cloud-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.cloud {
+    position: absolute;
+    background: radial-gradient(circle, rgba(200, 200, 210, 0.15) 0%, transparent 60%);
+    filter: blur(40px);
+    border-radius: 50%;
+}
+
+.cloud-1 {
+    width: 500px;
+    height: 300px;
+    top: 10%;
+    left: -10%;
+}
+
+.cloud-2 {
+    width: 600px;
+    height: 400px;
+    top: -10%;
+    right: -20%;
+}
+
+.cloud-3 {
+    width: 400px;
+    height: 200px;
+    top: 40%;
+    left: 20%;
+    opacity: 0.5;
+}
+
+.cloud-4 {
+    width: 700px;
+    height: 350px;
+    bottom: 10%;
+    right: 10%;
+}
+
+.cloud-5 {
+    width: 300px;
+    height: 150px;
+    top: 20%;
+    right: 40%;
+}
+
+/* Lightning Styling */
+.lightning-flash {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+    z-index: 5;
+}
+
+.lightning-flash.active {
+    /* Animation handled by GSAP */
+}
+
+/* Text Overrides - Cool tones */
+.clouds-title {
+    background: linear-gradient(180deg, #e0e6ed 0%, #64748b 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 25px rgba(100, 200, 220, 0.2));
+}
