@@ -15,16 +15,7 @@ function AdaptationBalance() {
         const ctx = gsap.context(() => {
             const scene = sceneRef.current;
 
-            // Rain slows down (reduce intensity)
-            gsap.to('.gentle-rain', {
-                opacity: 0.2,
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top center',
-                    end: 'bottom center',
-                    scrub: 1
-                }
-            });
+
 
             // River flows calmly
             gsap.to(riverRef.current, {
@@ -173,8 +164,7 @@ function AdaptationBalance() {
                 {/* Warm light glow */}
                 <div ref={lightRef} className="warm-light"></div>
 
-                {/* Gentle rain (reduced) */}
-                <div className="gentle-rain"></div>
+
 
                 {/* Flowing river */}
                 <div ref={riverRef} className="calm-river"></div>

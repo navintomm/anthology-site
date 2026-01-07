@@ -14,14 +14,7 @@ function Conclusion() {
         const ctx = gsap.context(() => {
             const scene = sceneRef.current;
 
-            // Quiet drizzle animation
-            gsap.to(drizzleRef.current, {
-                opacity: 0.15,
-                duration: 3,
-                ease: 'sine.inOut',
-                repeat: -1,
-                yoyo: true
-            });
+
 
             // Reflection message fades in slowly
             gsap.from(messageRef.current, {
@@ -112,13 +105,15 @@ function Conclusion() {
                     style={{ backgroundImage: `url(${conclusionSunsetImg})` }}
                 ></div>
 
-                {/* Quiet drizzle */}
-                <div ref={drizzleRef} className="quiet-drizzle"></div>
+
             </div>
 
             {/* Content */}
             <div className="scene-content conclusion-content">
-                <h2 className="scene-title conclusion-title">The Circle Completes</h2>
+                <h2 className="conclusion-title">
+                    <span className="title-top">The Circle</span>
+                    <span className="title-bottom">Completes</span>
+                </h2>
                 <p className="scene-subtitle conclusion-subtitle">
                     A Reflection on Monsoon, Resilience & Balance
                 </p>

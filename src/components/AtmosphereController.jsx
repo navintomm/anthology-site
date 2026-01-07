@@ -35,23 +35,25 @@ const AtmosphereController = () => {
 
                 // Base intensity from progress (The Story Arc: CALM -> BUILDUP -> CHAOS -> CALM)
                 let baseIntensity = 0;
-                if (progress <= 0.15) baseIntensity = 0.05;
-                else if (progress > 0.15 && progress <= 0.3) baseIntensity = gsap.utils.mapRange(0.15, 0.3, 0.05, 0.3, progress);
-                else if (progress > 0.3 && progress <= 0.5) baseIntensity = gsap.utils.mapRange(0.3, 0.5, 0.3, 0.7, progress);
+                if (progress <= 0.25) baseIntensity = 0;
+                else if (progress > 0.25 && progress <= 0.4) baseIntensity = gsap.utils.mapRange(0.25, 0.4, 0, 0.3, progress);
+                else if (progress > 0.4 && progress <= 0.55) baseIntensity = gsap.utils.mapRange(0.4, 0.55, 0.3, 0.7, progress);
                 else if (progress > 0.5 && progress <= 0.75) baseIntensity = gsap.utils.mapRange(0.5, 0.75, 0.7, 0.95, progress);
-                else if (progress > 0.75 && progress <= 0.9) baseIntensity = gsap.utils.mapRange(0.75, 0.9, 0.7, 0.15, progress);
-                else if (progress > 0.9) baseIntensity = 0.05;
+                else if (progress > 0.75 && progress <= 0.88) baseIntensity = gsap.utils.mapRange(0.75, 0.88, 0.7, 0, progress);
+                else if (progress > 0.88) baseIntensity = 0;
 
                 // Dynamic modifier from velocity (The "Control")
-                // Velocity usually ranges 0-3000+. 
-                // We want high velocity to add ~0.3 to intensity
+                // Only add extra rain if there is already a base intensity (i.e., we are in a rain zone)
                 const velocityFactor = Math.min(velocity / 4000, 0.3);
 
-                const finalIntensity = Math.min(baseIntensity + velocityFactor, 1.0);
+                // Gate the final intensity: If base is 0, stay at 0.
+                const finalIntensity = baseIntensity > 0
+                    ? Math.min(baseIntensity + velocityFactor, 1.0)
+                    : 0;
 
                 // Wind based on velocity and direction
-                // Fast scroll down -> wind blows up/diag? Or just visual sway
-                const windForce = (velocity / 5000) * direction * -1; // -1 to invert visual flow slightly
+                // Wind can still happen even if no rain is visible
+                const windForce = (velocity / 5000) * direction * -1;
 
                 setWeatherState(prev => ({
                     ...prev,

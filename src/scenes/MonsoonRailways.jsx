@@ -7,75 +7,43 @@ import railwayWaterfallImg from '../assets/railway_waterfall.png';
 
 function MonsoonRailways() {
     const sceneRef = useRef(null);
-    const trainRef = useRef(null);
-    const headlightRef = useRef(null);
-    const signalRef = useRef(null);
     const fogRef = useRef(null);
     const rainContainerRef = useRef(null);
-    const [trainSpeed, setTrainSpeed] = useState(10);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
-            const scene = sceneRef.current; // ... existing code ...
+            const scene = sceneRef.current;
 
 
-            // Train movement & Storm effects
-            gsap.to(trainRef.current, {
-                x: 800,
-                ease: 'none',
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top bottom',
-                    end: 'bottom top',
-                    scrub: 1,
-                    onUpdate: (self) => {
-                        const velocity = self.getVelocity();
-                        const speed = Math.abs(velocity / 100);
+            // Storm Intensity: Slant rain based on scroll direction & speed
+            ScrollTrigger.create({
+                trigger: scene,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: 1,
+                onUpdate: (self) => {
+                    const velocity = self.getVelocity();
+                    const speed = Math.abs(velocity / 100);
+                    const isScrollingDown = self.direction > 0;
+                    const slant = Math.min(Math.abs(velocity / 40), 30) * (isScrollingDown ? -1 : 1);
 
-                        // Update train speed
-                        setTrainSpeed(Math.min(speed, 30));
+                    if (rainContainerRef.current) {
+                        gsap.to(rainContainerRef.current, {
+                            skewX: slant,
+                            opacity: 0.4 + (self.progress * 0.5),
+                            duration: 0.2,
+                            ease: 'power1.out'
+                        });
+                    }
 
-                        // Storm Intensity: Slant rain based on scroll direction & speed
-                        const isScrollingDown = self.direction > 0;
-                        const slant = Math.min(Math.abs(velocity / 40), 30) * (isScrollingDown ? -1 : 1);
-
-                        if (rainContainerRef.current) {
-                            gsap.to(rainContainerRef.current, {
-                                skewX: slant,
-                                opacity: 0.4 + (self.progress * 0.5), // More rain as we go deep
-                                duration: 0.2,
-                                ease: 'power1.out'
-                            });
-                        }
-
-                        // LIGHTNING: Trigger flash if scrolling very fast
-                        if (speed > 15 && Math.random() > 0.95) {
-                            const flash = document.querySelector('.lightning-flash');
-                            if (flash) {
-                                gsap.to(flash, { opacity: 0.8, duration: 0.1, yoyo: true, repeat: 1 });
-                            }
+                    // LIGHTNING: Trigger flash if scrolling very fast
+                    if (speed > 15 && Math.random() > 0.95) {
+                        const flash = document.querySelector('.lightning-flash');
+                        if (flash) {
+                            gsap.to(flash, { opacity: 0.8, duration: 0.1, yoyo: true, repeat: 1 });
                         }
                     }
                 }
-            });
-
-            // Headlight glow effect
-            gsap.to(headlightRef.current, {
-                opacity: 0.8,
-                scale: 1.2,
-                duration: 2,
-                ease: 'sine.inOut',
-                repeat: -1,
-                yoyo: true
-            });
-
-            // Signal blinking
-            gsap.to(signalRef.current, {
-                opacity: 1,
-                duration: 1,
-                ease: 'steps(2)',
-                repeat: -1,
-                yoyo: true
             });
 
             // Fog movement
@@ -88,9 +56,9 @@ function MonsoonRailways() {
                 yoyo: true
             });
 
-            // Reflections on tracks
+            // Reflections on tracks (keeping as a subtle environmental detail)
             gsap.to('.track-reflection', {
-                opacity: 0.6,
+                opacity: 0.3,
                 duration: 2,
                 ease: 'sine.inOut',
                 repeat: -1,
@@ -125,33 +93,8 @@ function MonsoonRailways() {
 
         }, sceneRef);
 
-        // Continuous chugging animation
-        gsap.to(trainRef.current, {
-            y: "-=5",
-            duration: 0.1,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-        });
-
         return () => ctx.revert();
     }, []);
-
-    const handleMouseMove = (e) => {
-        // Influence headlight glow based on cursor proximity
-        if (!headlightRef.current) return;
-        const rect = headlightRef.current.getBoundingClientRect();
-        const dx = e.clientX - (rect.left + rect.width / 2);
-        const dy = e.clientY - (rect.top + rect.height / 2);
-        const dist = Math.sqrt(dx * dx + dy * dy);
-
-        const intensity = Math.max(0.8, 2 - dist / 300);
-        gsap.to(headlightRef.current, {
-            scale: intensity * 1.2,
-            opacity: Math.min(intensity, 1),
-            duration: 0.3
-        });
-    };
 
     const handleSceneClick = () => {
         // Clicking triggers a cinematic lightning flash locally too
@@ -176,7 +119,6 @@ function MonsoonRailways() {
         <section
             ref={sceneRef}
             className="scene monsoon-railways"
-            onMouseMove={handleMouseMove}
             onClick={handleSceneClick}
         >
             {/* Background layers */}
@@ -206,27 +148,11 @@ function MonsoonRailways() {
                     ))}
                 </div>
 
-                {/* Railway tracks with reflections */}
+                {/* Railway tracks with subtle reflections */}
                 <div className="railway-tracks">
                     <div className="track track-1"></div>
                     <div className="track track-2"></div>
                     <div className="track-reflection"></div>
-                </div>
-
-                {/* Signal lights */}
-                <div className="signal-post">
-                    <div ref={signalRef} className="signal-light"></div>
-                </div>
-
-                {/* Train */}
-                <div ref={trainRef} className="train" style={{ '--speed': trainSpeed }}>
-                    <div className="train-body">
-                        <div ref={headlightRef} className="headlight"></div>
-                        <div className="train-window"></div>
-                        <div className="train-window"></div>
-                        <div className="train-wheel"></div>
-                        <div className="train-wheel"></div>
-                    </div>
                 </div>
             </div>
 
@@ -234,12 +160,12 @@ function MonsoonRailways() {
             <div className="scene-content">
                 <h2 className="scene-title railway-title">Monsoon & Railways</h2>
                 <p className="story-text railway-text">
-                    Through sheets of rain, the train cuts across the landscape.
-                    Its headlights pierce the fog, illuminating tracks that glisten
-                    with reflected light. Signals blink in rhythm with the storm,
-                    guiding journeys through the monsoon's embrace.
+                    In the heart of the Western Ghats, the tracks wind through misty peaks.
+                    Sheets of rain fall over the ancient iron, while distant waterfalls
+                    surge with new life. Even in the height of the storm, the landscape
+                    possesses a haunting, metallic beauty.
                 </p>
-                <p className="interaction-hint">Scroll faster to increase train speed</p>
+                <p className="interaction-hint">Click to trigger lightning</p>
             </div>
         </section>
     );

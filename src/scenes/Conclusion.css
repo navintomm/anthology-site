@@ -1,10 +1,14 @@
 .conclusion {
     background: linear-gradient(180deg, var(--deep-charcoal) 0%, var(--void-black) 100%);
     position: relative;
-    min-height: 100vh;
+    min-height: 120vh;
+    /* More breathing room */
     display: flex;
     align-items: center;
     justify-content: center;
+    padding-top: 10vh;
+    /* Push away from greenery */
+    z-index: 50;
 }
 
 .calm-sky {
@@ -18,22 +22,22 @@
     opacity: 0.5;
     mix-blend-mode: normal;
     filter: brightness(0.8);
+    z-index: -1;
 }
 
 /* Subtle Glass Card for Reflection */
 .reflection-message {
-    background: rgba(5, 5, 5, 0.6);
-    backdrop-filter: blur(30px);
+    background: rgba(5, 5, 5, 0.4);
+    backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    /* Extremely subtle border */
-    border-radius: 2px;
+    border-radius: 4px;
     padding: 4rem 6rem;
-    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
-    /* Deep shadow for lift */
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.6);
     max-width: 900px;
     margin: 0 auto;
     position: relative;
     text-align: center;
+    z-index: 10;
 }
 
 .reflection-paragraph {
@@ -46,41 +50,73 @@
 }
 
 .closing-symbol {
-    font-size: 2rem;
-    opacity: 0.4;
+    font-size: 3rem;
+    opacity: 0.6;
     margin-top: 3rem;
-    filter: grayscale(100%) brightness(150%);
-    /* Silvery look */
-    animation: float 6s ease-in-out infinite;
+    display: inline-block;
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.2));
 }
 
 /* Typography refined */
 .conclusion-title {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1;
+}
+
+.title-top {
+    font-family: var(--font-body);
+    font-size: clamp(1rem, 2vw, 1.5rem);
+    letter-spacing: 0.6em;
+    text-transform: uppercase;
+    opacity: 0.6;
     margin-bottom: 0.5rem;
+    color: var(--mist-blue);
+}
+
+.title-bottom {
+    font-family: var(--font-hero);
+    font-weight: 300;
+    font-size: clamp(3rem, 10vw, 7rem);
     letter-spacing: 0.15em;
-    font-size: 4rem;
+    text-transform: uppercase;
+    color: var(--text-primary);
+    text-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
 }
 
 .conclusion-subtitle {
     font-family: var(--font-accent);
     font-style: italic;
-    font-size: 1.5rem;
-    color: var(--text-muted);
+    font-size: clamp(1rem, 2vw, 1.6rem);
+    color: var(--mist-blue);
     margin-bottom: 4rem;
-    opacity: 0.7;
+    opacity: 0.8;
+    letter-spacing: 0.05em;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 /* Responsive */
 @media (max-width: 768px) {
     .reflection-message {
         padding: 2rem;
-        border: none;
-        background: transparent;
-        box-shadow: none;
-        backdrop-filter: none;
+        background: rgba(5, 5, 5, 0.8);
     }
 
     .conclusion-title {
-        font-size: 2.5rem;
+        font-size: 2.2rem;
+        letter-spacing: 0.15em;
     }
 }

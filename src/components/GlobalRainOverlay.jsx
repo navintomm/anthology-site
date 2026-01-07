@@ -115,8 +115,8 @@ const GlobalRainOverlay = ({ intensity, wind, time }) => {
                 height: '100%',
                 pointerEvents: 'none',
                 zIndex: 9000, // Very high
-                opacity: intensity > 0.01 ? 1 : 0,
-                transition: 'opacity 0.5s ease'
+                opacity: intensity > 0 ? 1 : 0,
+                transition: 'opacity 0.2s ease-in-out'
             }}
         />
     );
