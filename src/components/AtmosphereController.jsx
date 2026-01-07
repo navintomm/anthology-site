@@ -2,10 +2,6 @@ import { useEffect, useState, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import GlobalRainOverlay from './GlobalRainOverlay';
-import './AtmosphereController.css';
-
-gsap.registerPlugin(ScrollTrigger);
-
 const AtmosphereController = () => {
     const [weatherState, setWeatherState] = useState({
         intensity: 0, // 0 to 1
@@ -16,11 +12,6 @@ const AtmosphereController = () => {
 
     const containerRef = useRef(null);
     const cursorRef = useRef(null);
-
-    // Weather Zones Configuration
-    // Defines base intensity for scroll ranges (0.0 - 1.0 of page height approximately, or use specific elements)
-    // Since App maps scenes vertically, we can approximate or use specific triggers per scene.
-    // Simpler approach: Use a global timeline that scrubs through "weather keyframes".
 
     useEffect(() => {
         // --- 1. Scroll-Driven Weather Logic ---
@@ -82,32 +73,23 @@ const AtmosphereController = () => {
                 ease: "power2.out"
             });
 
-            // "Puddle interaction" - if intensity is high, cursor leaves a trail?
-            // For now, simpler: Cursor acts as a "shield" or light.
-        };
+            // Global Parallax for specific elements
+            const xPct = (e.clientX / window.innerWidth - 0.5) * 20; // -10 to 10
+            const yPct = (e.clientY / window.innerHeight - 0.5) * 20;
 
-        // Add click listener for Thunder
-        const triggerThunder = () => {
-            // Flash screen
-            gsap.fromTo('.thunder-flash',
-                { opacity: 0.8 },
-                { opacity: 0, duration: 0.6, ease: "power2.in" }
-            );
-
-            // Screen Shake
-            gsap.fromTo('.app',
-                { x: -10 },
-                { x: 0, duration: 0.1, repeat: 5, yoyo: true, ease: "rough" }
-            );
+            gsap.to('.mouse-parallax', {
+                x: xPct,
+                y: yPct,
+                duration: 1,
+                ease: 'power2.out'
+            });
         };
 
         window.addEventListener('mousemove', moveCursor);
-        window.addEventListener('click', triggerThunder);
 
         return () => {
             scrollTracker.kill();
             window.removeEventListener('mousemove', moveCursor);
-            window.removeEventListener('click', triggerThunder);
         };
     }, []);
 
@@ -119,16 +101,6 @@ const AtmosphereController = () => {
             />
 
             <div ref={cursorRef} className="custom-cursor-glow" />
-
-            <div className="thunder-flash" style={{
-                position: 'fixed',
-                inset: 0,
-                backgroundColor: '#fff',
-                opacity: 0,
-                pointerEvents: 'none',
-                mixBlendMode: 'overlay',
-                zIndex: 9999
-            }} />
         </>
     );
 };

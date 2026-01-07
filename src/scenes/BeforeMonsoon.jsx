@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './BeforeMonsoon.css';
@@ -9,6 +9,7 @@ function BeforeMonsoon() {
     const sceneRef = useRef(null);
     const cracksRef = useRef([]);
     const heatWaveRef = useRef(null);
+    const [dustPuffs, setDustPuffs] = useState([]);
 
     useEffect(() => {
         const ctx = gsap.context(() => {
@@ -110,8 +111,30 @@ function BeforeMonsoon() {
         };
     }, []);
 
+    const handleEarthClick = useCallback((e) => {
+        // Prevent interaction if clicked on text
+        if (e.target.closest('.scene-content')) return;
+
+        const rect = sceneRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const newPuff = {
+            id: Date.now(),
+            x,
+            y
+        };
+
+        setDustPuffs(prev => [...prev, newPuff]);
+
+        // Cleanup puff after animation (1s)
+        setTimeout(() => {
+            setDustPuffs(prev => prev.filter(p => p.id !== newPuff.id));
+        }, 1000);
+    }, []);
+
     return (
-        <section ref={sceneRef} className="scene before-monsoon">
+        <section ref={sceneRef} className="scene before-monsoon" onClick={handleEarthClick}>
             {/* Background layers */}
             <div className="scene-bg">
                 <div
@@ -120,6 +143,18 @@ function BeforeMonsoon() {
                     style={{ backgroundImage: `url(${dryEarthImg})` }}
                 ></div>
                 <div className="parallax-layer heat-wave" ref={heatWaveRef}></div>
+
+                {/* Interactive Dust Puffs */}
+                {dustPuffs.map(puff => (
+                    <div
+                        key={puff.id}
+                        className="dust-puff"
+                        style={{
+                            left: puff.x,
+                            top: puff.y
+                        }}
+                    />
+                ))}
 
                 {/* Crack lines */}
                 <svg className="crack-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none">
@@ -166,6 +201,9 @@ function BeforeMonsoon() {
                     waiting, yearning for the first touch of rain. The air shimmers with heat,
                     and time moves slowly in the silence of anticipation.
                 </p>
+                <div className="interaction-hint">
+                    Click to disturb the dry earth
+                </div>
             </div>
         </section>
     );

@@ -1,0 +1,59 @@
+.audio-controller {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    z-index: 1001;
+    /* Above most things, below mobile overlay if any */
+    pointer-events: auto;
+}
+
+.audio-toggle {
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.7);
+    padding: 0.8rem 1.2rem;
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+}
+
+.audio-toggle:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.audio-toggle.active {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+}
+
+.audio-toggle svg {
+    font-size: 1.1rem;
+}
+
+/* Hide label on small mobile for space */
+@media (max-width: 600px) {
+    .audio-toggle {
+        padding: 0.8rem;
+    }
+
+    .audio-label {
+        display: none;
+    }
+
+    .audio-controller {
+        top: 1.5rem;
+        right: 1.5rem;
+    }
+}

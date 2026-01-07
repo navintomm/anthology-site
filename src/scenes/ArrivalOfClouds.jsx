@@ -10,6 +10,8 @@ function ArrivalOfClouds() {
     const cloudsRef = useRef([]);
     const lightningRef = useRef(null);
     const [lightningVisible, setLightningVisible] = useState(false);
+    const [isSummoning, setIsSummoning] = useState(false);
+    const timerRef = useRef(null);
 
     useEffect(() => {
         // Ambient Motion: Clouds drifting continuously
@@ -67,22 +69,7 @@ function ArrivalOfClouds() {
                 }
             });
 
-            // Lightning flash on scroll peaks
-            ScrollTrigger.create({
-                trigger: scene,
-                start: 'top 30%',
-                end: 'bottom 70%',
-                onUpdate: (self) => {
-                    // Trigger lightning at certain scroll points
-                    if (self.progress > 0.3 && self.progress < 0.35) {
-                        triggerLightning();
-                    } else if (self.progress > 0.7 && self.progress < 0.75) {
-                        triggerLightning();
-                    }
-                }
-            });
-
-            // Distant lighting flickering
+            // Distant lighting flickering (Keeping as ambient only)
             const lights = document.querySelectorAll('.distant-light');
             lights.forEach(light => {
                 gsap.to(light, {
@@ -138,25 +125,41 @@ function ArrivalOfClouds() {
         return () => ctx.revert();
     }, []);
 
-    const triggerLightning = () => {
-        setLightningVisible(true);
+    // Summoning Effect Logic
+    useEffect(() => {
+        if (isSummoning) {
+            // Darken Sky
+            gsap.to(sceneRef.current, { background: 'linear-gradient(180deg, #10141a 0%, #1e242e 100%)', duration: 1 });
+            gsap.to('.storm-clouds-bg', { filter: 'brightness(0.3) contrast(1.4)', duration: 1 });
+            gsap.to('.cloud', { filter: 'brightness(0.4)', duration: 1 });
 
-        gsap.to(lightningRef.current, {
-            opacity: 0.8,
-            duration: 0.1,
-            onComplete: () => {
-                gsap.to(lightningRef.current, {
-                    opacity: 0,
-                    duration: 0.2,
-                    delay: 0.1,
-                    onComplete: () => setLightningVisible(false)
-                });
-            }
-        });
-    };
+        } else {
+            // Restore Sky
+            gsap.to(sceneRef.current, { background: 'linear-gradient(180deg, #1a1f28 0%, #2d3541 100%)', duration: 1 });
+            gsap.to('.storm-clouds-bg', { filter: 'brightness(1) contrast(1)', duration: 1 });
+            gsap.to('.cloud', { filter: 'brightness(1)', duration: 1 });
+
+            if (timerRef.current) clearInterval(timerRef.current);
+        }
+
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, [isSummoning]);
+
+    const handleMouseDown = () => setIsSummoning(true);
+    const handleMouseUp = () => setIsSummoning(false);
 
     return (
-        <section ref={sceneRef} className="scene arrival-clouds">
+        <section
+            ref={sceneRef}
+            className="scene arrival-clouds"
+            onMouseDown={handleMouseDown}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchStart={handleMouseDown}
+            onTouchEnd={handleMouseUp}
+        >
             {/* Background layers */}
             <div className="scene-bg">
                 {/* Image Background */}
@@ -167,10 +170,10 @@ function ArrivalOfClouds() {
                 ></div>
 
                 {/* Fog Layer */}
-                <div className="fog-layer"></div>
+                <div className="fog-layer mouse-parallax"></div>
 
                 {/* Cloud layers - multiple independent elements */}
-                <div ref={el => cloudsRef.current[0] = el} className="cloud cloud-1" data-speed="0.4"></div>
+                <div ref={el => cloudsRef.current[0] = el} className="cloud cloud-1 mouse-parallax" data-speed="0.4"></div>
                 <div ref={el => cloudsRef.current[1] = el} className="cloud cloud-2" data-speed="0.5"></div>
                 <div ref={el => cloudsRef.current[2] = el} className="cloud cloud-3" data-speed="0.6"></div>
                 <div ref={el => cloudsRef.current[3] = el} className="cloud cloud-4" data-speed="0.7"></div>
@@ -180,13 +183,6 @@ function ArrivalOfClouds() {
                 <div className="distant-light light-1"></div>
                 <div className="distant-light light-2"></div>
                 <div className="distant-light light-3"></div>
-
-                {/* Lightning flash overlay */}
-                <div
-                    ref={lightningRef}
-                    className={`lightning-flash ${lightningVisible ? 'active' : ''}`}
-                    style={{ '--x': '60%', '--y': '20%' }}
-                ></div>
             </div>
 
             {/* Content */}
@@ -194,11 +190,12 @@ function ArrivalOfClouds() {
                 <h2 className="scene-title clouds-title">Arrival of Clouds</h2>
                 <p className="story-text clouds-text">
                     Dark masses gather on the horizon, rolling in like silent giants.
-                    The sky transforms from warm amber to deep indigo. Lightning cracks
-                    through the heavens, announcing the imminent arrival of the monsoon.
+                    The sky transforms from warm amber to deep indigo.
                 </p>
-                <div onClick={triggerLightning} style={{ cursor: 'pointer', marginTop: '1rem', display: 'inline-block' }}>
-                    <p className="interaction-hint">Click for Lightning ⚡</p>
+                <div className="cursor-hint-container" style={{ marginTop: '2rem', cursor: 'pointer' }}>
+                    <p className={`interaction-hint ${isSummoning ? 'active' : ''}`}>
+                        {isSummoning ? "Summoning Storm..." : "Hold to summon the storm"}
+                    </p>
                 </div>
             </div>
         </section>

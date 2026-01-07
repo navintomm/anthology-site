@@ -10,6 +10,7 @@ import AdaptationBalance from './scenes/AdaptationBalance';
 import Conclusion from './scenes/Conclusion';
 import Navigation from './components/Navigation';
 import AtmosphereController from './components/AtmosphereController';
+import AudioController from './components/AudioController';
 import ProgressBar from './components/ProgressBar';
 import './App.css';
 
@@ -127,6 +128,7 @@ function App() {
 
       {/* Global Atmosphere Effects */}
       <AtmosphereController />
+      <AudioController />
     </div>
   );
 }
