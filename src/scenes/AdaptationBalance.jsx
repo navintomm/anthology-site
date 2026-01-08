@@ -25,13 +25,9 @@ function AdaptationBalance() {
                 repeat: -1
             });
 
-            // Train moves steadily (not scroll-dependent)
-            gsap.to(trainRef.current, {
-                x: '100vw',
-                duration: 20,
-                ease: 'none',
-                repeat: -1
-            });
+            // Train removed
+
+            // River flows calmly
 
             // Greenery appears and grows
             greensRef.current.forEach((green, index) => {
@@ -176,10 +172,7 @@ function AdaptationBalance() {
                 <div ref={el => greensRef.current[3] = el} className="greenery green-4"></div>
                 <div ref={el => greensRef.current[4] = el} className="greenery green-5"></div>
 
-                {/* Steady train */}
-                <div ref={trainRef} className="steady-train">
-                    <div className="train-mini-body"></div>
-                </div>
+                {/* Train removed as per user request */}
             </div>
 
             {/* Content */}

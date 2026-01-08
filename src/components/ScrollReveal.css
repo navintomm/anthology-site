@@ -1,0 +1,16 @@
+.scroll-reveal {
+    position: relative;
+    z-index: 10;
+    color: var(--text-primary);
+    width: 100%;
+}
+
+.scroll-reveal-text {
+    display: inline-block;
+    line-height: 1.2;
+}
+
+.word {
+    display: inline-block;
+    white-space: pre;
+}

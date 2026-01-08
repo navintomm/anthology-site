@@ -1,21 +1,146 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import './BeforeMonsoon.css';
-
 import dryEarthImg from '../assets/dry_earth.png';
 
 function BeforeMonsoon() {
     const sceneRef = useRef(null);
-    const cracksRef = useRef([]);
+    const canvasRef = useRef(null);
     const heatWaveRef = useRef(null);
-    const [dustPuffs, setDustPuffs] = useState([]);
+    const cracksRef = useRef([]);
 
     useEffect(() => {
-        const ctx = gsap.context(() => {
-            const scene = sceneRef.current;
+        const scene = sceneRef.current;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        let animationFrameId;
+        let particles = [];
+        let shockwaves = [];
 
-            // Heat distortion effect
+        // Set pointer-events: none on canvas so clicks pass through to text, 
+        // BUT we need to capture mouse events on the SCENE to feed the canvas.
+        // Canvas sizing
+        const resizeCanvas = () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        };
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        // PARTICLE SYSTEM
+        class DustParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.speedX = (Math.random() - 0.5) * 1.5;
+                this.speedY = (Math.random() * -1) - 0.5; // Drift up
+                this.life = 1.0;
+                this.decay = Math.random() * 0.02 + 0.01;
+                this.color = `rgba(189, 165, 155, ${this.life})`; // Dust color
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY; // Rise with heat
+                this.life -= this.decay;
+                this.size *= 0.98; // Shrink slightly
+            }
+            draw(context) {
+                context.fillStyle = `rgba(189, 165, 155, ${this.life})`;
+                context.beginPath();
+                context.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                context.fill();
+            }
+        }
+
+        class Shockwave {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.radius = 10;
+                this.maxRadius = 150;
+                this.opacity = 0.8;
+                this.lineWidth = 5;
+            }
+            update() {
+                this.radius += 5; // Expand fast
+                this.opacity -= 0.03;
+                this.lineWidth *= 0.95;
+            }
+            draw(context) {
+                context.strokeStyle = `rgba(255, 204, 128, ${this.opacity})`; // Warm amber
+                context.lineWidth = this.lineWidth;
+                context.beginPath();
+                context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                context.stroke();
+            }
+        }
+
+        const animate = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Update/Draw Dust
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw(ctx);
+                if (p.life <= 0) particles.splice(index, 1);
+            });
+
+            // Update/Draw Shockwaves
+            shockwaves.forEach((s, index) => {
+                s.update();
+                s.draw(ctx);
+                if (s.opacity <= 0) shockwaves.splice(index, 1);
+            });
+
+            animationFrameId = requestAnimationFrame(animate);
+        };
+        animate();
+
+        // INTERACTION HANDLERS
+        const handleMouseMove = (e) => {
+            // Heat drift parallax for background (existing effect)
+            if (heatWaveRef.current) {
+                const xOffset = (e.clientX / window.innerWidth - 0.5) * 40;
+                const yOffset = (e.clientY / window.innerHeight - 0.5) * 40;
+                gsap.to(heatWaveRef.current, {
+                    x: xOffset,
+                    y: yOffset,
+                    duration: 2,
+                    ease: 'power2.out',
+                    overwrite: 'auto'
+                });
+            }
+
+            // Spawn dust on move (trail)
+            // Limit spawn rate for performance? Na, pure random is organic.
+            if (Math.random() < 0.4) { // 40% chance per frame interaction
+                // Get mouse pos relative to scene? 
+                // Easiest is just clientX/Y if canvas is fixed/absolute covering screen.
+                // Assuming canvas covers viewport.
+                particles.push(new DustParticle(e.clientX, e.clientY));
+            }
+        };
+
+        const handleClick = (e) => {
+            // Spawn Shockwave
+            shockwaves.push(new Shockwave(e.clientX, e.clientY));
+
+            // Spawn burst of dust
+            for (let i = 0; i < 15; i++) {
+                particles.push(new DustParticle(e.clientX, e.clientY));
+            }
+        };
+
+        // Attach listeners to WINDOW to ensure capture, or Scene. 
+        // Window is safer for "mouse trail" feeling.
+        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('click', handleClick);
+
+        // GSAP CONTEXT (Existing Animations)
+        const gsapCtx = gsap.context(() => {
+            // Heat wave animation
             gsap.to(heatWaveRef.current, {
                 y: -20,
                 opacity: 0.6,
@@ -25,7 +150,7 @@ function BeforeMonsoon() {
                 yoyo: true
             });
 
-            // Crack lines appear on scroll
+            // Cracks
             cracksRef.current.forEach((crack, index) => {
                 gsap.from(crack, {
                     scaleX: 0,
@@ -41,7 +166,7 @@ function BeforeMonsoon() {
                 });
             });
 
-            // Color transition as user scrolls
+            // Color shift
             gsap.to(scene, {
                 background: 'linear-gradient(180deg, #3e2723 0%, #4e342e 100%)',
                 scrollTrigger: {
@@ -52,10 +177,7 @@ function BeforeMonsoon() {
                 }
             });
 
-            // Text animations removed to use global smooth entry
-
-
-            // Cinematic Camera: zoom on scroll
+            // Parallax
             gsap.to('.dry-earth-bg', {
                 scale: 1.15,
                 scrollTrigger: {
@@ -65,53 +187,19 @@ function BeforeMonsoon() {
                     scrub: 1
                 }
             });
-
         }, sceneRef);
 
-        const handleMouseMove = (e) => {
-            // Subtle heat drift based on cursor
-            const xOffset = (e.clientX / window.innerWidth - 0.5) * 40;
-            const yOffset = (e.clientY / window.innerHeight - 0.5) * 40;
-
-            gsap.to(heatWaveRef.current, {
-                x: xOffset,
-                y: yOffset,
-                duration: 2,
-                ease: 'power2.out'
-            });
-        };
-
-        window.addEventListener('mousemove', handleMouseMove);
         return () => {
-            ctx.revert();
+            window.removeEventListener('resize', resizeCanvas);
             window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('click', handleClick);
+            cancelAnimationFrame(animationFrameId);
+            gsapCtx.revert();
         };
-    }, []);
-
-    const handleEarthClick = useCallback((e) => {
-        // Prevent interaction if clicked on text
-        if (e.target.closest('.scene-content')) return;
-
-        const rect = sceneRef.current.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const newPuff = {
-            id: Date.now(),
-            x,
-            y
-        };
-
-        setDustPuffs(prev => [...prev, newPuff]);
-
-        // Cleanup puff after animation (1s)
-        setTimeout(() => {
-            setDustPuffs(prev => prev.filter(p => p.id !== newPuff.id));
-        }, 1000);
     }, []);
 
     return (
-        <section ref={sceneRef} className="scene before-monsoon" onClick={handleEarthClick}>
+        <section ref={sceneRef} className="scene before-monsoon">
             {/* Background layers */}
             <div className="scene-bg">
                 <div
@@ -121,17 +209,12 @@ function BeforeMonsoon() {
                 ></div>
                 <div className="parallax-layer heat-wave" ref={heatWaveRef}></div>
 
-                {/* Interactive Dust Puffs */}
-                {dustPuffs.map(puff => (
-                    <div
-                        key={puff.id}
-                        className="dust-puff"
-                        style={{
-                            left: puff.x,
-                            top: puff.y
-                        }}
-                    />
-                ))}
+                {/* VISUAL EFFECTS CANVAS */}
+                <canvas
+                    ref={canvasRef}
+                    className="vfx-canvas"
+                    style={{ position: 'absolute', inset: 0, pointerEvents: 'none', zIndex: 20 }}
+                />
 
                 {/* Crack lines */}
                 <svg className="crack-overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none">

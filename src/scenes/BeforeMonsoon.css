@@ -68,22 +68,24 @@
     position: absolute;
     width: 60px;
     height: 60px;
-    background: radial-gradient(circle, rgba(161, 136, 127, 0.6) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(189, 165, 155, 0.8) 0%, transparent 70%);
+    /* Lighter color for visibility */
     border-radius: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none;
     z-index: 10;
-    animation: puff-expand 1s ease-out forwards;
+    animation: puff-expand 0.5s ease-out forwards;
+    /* FASTER ANIMATION */
 }
 
 @keyframes puff-expand {
     0% {
         transform: translate(-50%, -50%) scale(0.2);
-        opacity: 0.8;
+        opacity: 0.9;
     }
 
     100% {
-        transform: translate(-50%, -50%) scale(2.5);
+        transform: translate(-50%, -50%) scale(2.0);
         opacity: 0;
     }
 }
@@ -91,11 +93,19 @@
 .interaction-hint {
     margin-top: 2rem;
     font-size: 0.9rem;
-    opacity: 0.6;
+    opacity: 0.8;
     letter-spacing: 0.1em;
-    color: #a1887f;
-    animation: pulse-opacity 2s ease-in-out infinite;
-    pointer-events: none;
+    color: #d7ccc8;
+    /* Lighter text */
+    animation: pulse-opacity 1.5s ease-in-out infinite;
+    /* Faster pulse */
+    cursor: pointer;
+    /* Pointer cursor to indicate clickability */
+    pointer-events: auto;
+    /* Allow clicking on the text itself */
+    border-bottom: 1px dashed rgba(215, 204, 200, 0.5);
+    /* Visual cue */
+    padding-bottom: 2px;
 }
 
 @keyframes pulse-opacity {

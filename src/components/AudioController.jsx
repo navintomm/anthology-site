@@ -4,66 +4,68 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { FaVolumeUp, FaVolumeMute } from 'react-icons/fa';
 import './AudioController.css';
 
-// Placeholder imports - the user will need to place actual files here
-// We use direct paths for now or imports if files existed. 
-// Since they don't, we'll try to load them from the public folder or src assets if updated.
-// For now, we'll assume they will be placed in src/assets/audio/ and imported.
-
-// NOTE: Since files don't exist yet, I'm setting up the structure.
-// In a real scenario, we'd import them. For this draft, I will just point to the path string.
-
+// Audio tracks referencing files in the public/audio folder
 const AUDIO_TRACKS = {
-    DRY_WIND: '/src/assets/audio/wind_dry.mp3',
-    THUNDER: '/src/assets/audio/thunder_distant.mp3',
-    HEAVY_RAIN: '/src/assets/audio/monsoon_rain.mp3',
-    CONCLUSION: '/src/assets/audio/birds_calm.mp3'
+    DRY_WIND: '/audio/wind_dry.mp3',
+    THUNDER: '/audio/thunder_distant.mp3',
+    HEAVY_RAIN: '/audio/monsoon_rain.mp3',
+    CONCLUSION: '/audio/birds_calm.mp3'
 };
 
 const AudioController = () => {
     const [isMuted, setIsMuted] = useState(true);
     const [hasInteracted, setHasInteracted] = useState(false);
 
-    // Audio Refs
-    const dryWindRef = useRef(new Audio(AUDIO_TRACKS.DRY_WIND));
-    const thunderRef = useRef(new Audio(AUDIO_TRACKS.THUNDER));
-    const rainRef = useRef(new Audio(AUDIO_TRACKS.HEAVY_RAIN));
-    const conclusionRef = useRef(new Audio(AUDIO_TRACKS.CONCLUSION));
-
-    const audioRefs = [dryWindRef, thunderRef, rainRef, conclusionRef];
+    // Use a ref to store our Audio instances so they persist across renders
+    const audioInstancesRef = useRef({});
 
     useEffect(() => {
-        // Setup Loops
-        audioRefs.forEach(ref => {
-            ref.current.loop = true;
-            ref.current.volume = 0;
-            // Preload
-            ref.current.load();
+        // Initialize audio objects once
+        Object.keys(AUDIO_TRACKS).forEach(key => {
+            const audio = new Audio(AUDIO_TRACKS[key]);
+            audio.loop = true;
+            audio.volume = 0;
+            audio.preload = 'auto'; // Attempt to preload
+
+            // Error handling
+            audio.onerror = () => {
+                console.warn(`Audio loading failed for: ${AUDIO_TRACKS[key]}. Make sure the file exists in public/audio/`);
+            };
+
+            audioInstancesRef.current[key] = audio;
         });
 
-        // Cleanup
+        // Cleanup on unmount
         return () => {
-            audioRefs.forEach(ref => {
-                ref.current.pause();
-                ref.current.src = "";
+            Object.values(audioInstancesRef.current).forEach(audio => {
+                audio.pause();
+                audio.src = "";
             });
         };
     }, []);
 
     useEffect(() => {
+        const { DRY_WIND, THUNDER, HEAVY_RAIN, CONCLUSION } = audioInstancesRef.current;
+        if (!DRY_WIND) return; // Guard in case init failed somehow
+
         if (isMuted) {
-            audioRefs.forEach(ref => {
-                gsap.to(ref.current, { volume: 0, duration: 1 });
+            Object.values(audioInstancesRef.current).forEach(audio => {
+                gsap.to(audio, { volume: 0, duration: 1 });
             });
             return;
         }
 
-        // Only start playing if muted is false
-        // We need to ensure play() is called after a user interaction interaction (browser policy)
+        // Only start playing if user has interacted (browser autoplay policy)
         if (!hasInteracted) return;
 
-        // Start all tracks silent if they aren't playing
-        audioRefs.forEach(ref => {
-            if (ref.current.paused) ref.current.play().catch(e => console.log("Audio play failed:", e));
+        // Ensure all tracks are playing (but volume managed by scroll)
+        Object.values(audioInstancesRef.current).forEach(audio => {
+            if (audio.paused) {
+                audio.play().catch(e => {
+                    // This is common if user hasn't interacted enough or files missing
+                    console.log("Audio play deferred or failed:", e.message);
+                });
+            }
         });
 
         // Scroll Logic for Crossfading
@@ -78,7 +80,6 @@ const AudioController = () => {
                     const prog = self.progress;
 
                     // 1. Dry Wind (0.0 - 0.25)
-                    // Peak at 0.1, fade out by 0.3
                     const volWind = gsap.utils.clamp(0, 1,
                         prog < 0.2 ? gsap.utils.mapRange(0, 0.1, 0, 0.8, prog) : gsap.utils.mapRange(0.2, 0.35, 0.8, 0, prog)
                     );
@@ -101,10 +102,10 @@ const AudioController = () => {
                     );
 
                     // Apply volumes smoothly
-                    gsap.to(dryWindRef.current, { volume: volWind, duration: 0.5, overwrite: true });
-                    gsap.to(thunderRef.current, { volume: volThunder, duration: 0.5, overwrite: true });
-                    gsap.to(rainRef.current, { volume: volRain, duration: 0.5, overwrite: true });
-                    gsap.to(conclusionRef.current, { volume: volConclusion, duration: 0.5, overwrite: true });
+                    if (DRY_WIND) gsap.to(DRY_WIND, { volume: volWind, duration: 0.5, overwrite: true });
+                    if (THUNDER) gsap.to(THUNDER, { volume: volThunder, duration: 0.5, overwrite: true });
+                    if (HEAVY_RAIN) gsap.to(HEAVY_RAIN, { volume: volRain, duration: 0.5, overwrite: true });
+                    if (CONCLUSION) gsap.to(CONCLUSION, { volume: volConclusion, duration: 0.5, overwrite: true });
                 }
             });
         });
@@ -117,7 +118,9 @@ const AudioController = () => {
         if (!hasInteracted) {
             setHasInteracted(true);
             // Try to wake up audio context
-            audioRefs.forEach(ref => ref.current.play().catch(() => { }));
+            Object.values(audioInstancesRef.current).forEach(audio => {
+                audio.play().catch(() => { });
+            });
         }
     };
 

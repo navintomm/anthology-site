@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ScrollReveal from '../components/ScrollReveal';
+import Antigravity from '../components/Antigravity';
 import './ArrivalOfClouds.css';
 
 import stormCloudsImg from '../assets/storm_clouds.png';
@@ -93,9 +95,7 @@ function ArrivalOfClouds() {
                 }
             });
 
-            // Text animations removed to use global smooth entry
-            // The parent .scene-content is handled globally in App.jsx
-
+            // Text animations handled by ScrollReveal component now
 
         }, sceneRef);
 
@@ -156,6 +156,18 @@ function ArrivalOfClouds() {
                 <div ref={el => cloudsRef.current[3] = el} className="cloud cloud-4" data-speed="0.7"></div>
                 <div ref={el => cloudsRef.current[4] = el} className="cloud cloud-5" data-speed="0.8"></div>
 
+                {/* Antigravity Fireflies/Mist Particles */}
+                <Antigravity
+                    count={50}
+                    magnetRadius={15}
+                    ringRadius={15}
+                    particleSize={1}
+                    color="#ffd700" // Gold for magical feel
+                    opacity={0.3}
+                    rotationSpeed={0.2}
+                    particleShape="sphere"
+                />
+
                 {/* Distant flickering lights */}
                 <div className="distant-light light-1"></div>
                 <div className="distant-light light-2"></div>
@@ -164,11 +176,25 @@ function ArrivalOfClouds() {
 
             {/* Content */}
             <div className="scene-content">
-                <h2 className="scene-title clouds-title">Arrival of Clouds</h2>
-                <p className="story-text clouds-text">
-                    Dark masses gather on the horizon, rolling in like silent giants.
-                    The sky transforms from warm amber to deep indigo.
-                </p>
+                <ScrollReveal
+                    containerClassName="scene-title clouds-title"
+                    baseRotation={5}
+                    blurStrength={6}
+                >
+                    Arrival of Clouds
+                </ScrollReveal>
+
+                <div className="story-text clouds-text">
+                    <ScrollReveal
+                        baseOpacity={0.2}
+                        baseRotation={2}
+                        blurStrength={3}
+                        textClassName="story-paragraph"
+                    >
+                        Dark masses gather on the horizon, rolling in like silent giants. The sky transforms from warm amber to deep indigo.
+                    </ScrollReveal>
+                </div>
+
                 <div className="cursor-hint-container" style={{ marginTop: '2rem', cursor: 'pointer' }}>
                     <p className={`interaction-hint ${isSummoning ? 'active' : ''}`}>
                         {isSummoning ? "Summoning Storm..." : "Hold to summon the storm"}

@@ -14,20 +14,17 @@ function ImpactOnLife() {
         {
             id: 1,
             title: "Monsoon Agriculture",
-            content: "Nearly 60% of India's agricultural land depends on monsoon rainfall, sustaining millions of farmers.",
-            position: { top: '20%', left: '15%' }
+            content: "Nearly 60% of India's agricultural land depends on monsoon rainfall, sustaining millions of farmers."
         },
         {
             id: 2,
             title: "Urban Adaptation",
-            content: "Cities transform during monsoon, with daily life adapting to heavy rains and flooding.",
-            position: { top: '35%', right: '20%' }
+            content: "Cities transform during monsoon, with daily life adapting to heavy rains and flooding."
         },
         {
             id: 3,
             title: "Natural Renewal",
-            content: "Monsoons replenish rivers, groundwater, and bring life to parched landscapes.",
-            position: { bottom: '30%', left: '25%' }
+            content: "Monsoons replenish rivers, groundwater, and bring life to parched landscapes."
         }
     ];
 
@@ -99,6 +96,8 @@ function ImpactOnLife() {
             });
 
             // Fact cards stagger (Premium Slide Up)
+            // Ensure we start from visible opacity if trigger fails, 
+            // but normally .from() handles this.
             gsap.from('.clickable-fact', {
                 y: 50,
                 opacity: 0,
@@ -107,7 +106,7 @@ function ImpactOnLife() {
                 ease: 'power3.out',
                 scrollTrigger: {
                     trigger: scene,
-                    start: 'top 50%',
+                    start: 'top 60%', // Adjusted trigger point
                     toggleActions: 'play none none reverse'
                 }
             });
@@ -190,7 +189,6 @@ function ImpactOnLife() {
                         <div
                             key={fact.id}
                             className="clickable-fact"
-                            style={fact.position}
                             onClick={() => handleFactClick(fact.id)}
                         >
                             <h3 className="fact-title">{fact.title}</h3>

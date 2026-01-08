@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ScrollReveal from '../components/ScrollReveal';
+import Antigravity from '../components/Antigravity';
 import './MonsoonRailways.css';
 
 import railwayWaterfallImg from '../assets/railway_waterfall.png';
@@ -56,6 +58,23 @@ function MonsoonRailways() {
                 yoyo: true
             });
 
+            // Fog Dissipation on Enter ("City/Train appearing through Fog")
+            // Starts blurry and opaque, clears up as you center the scene
+            gsap.fromTo(fogRef.current,
+                { opacity: 0.9, filter: 'blur(8px)' },
+                {
+                    opacity: 0.4,
+                    filter: 'blur(2px)',
+                    ease: 'power2.inOut',
+                    scrollTrigger: {
+                        trigger: scene,
+                        start: 'top 70%',
+                        end: 'center center',
+                        scrub: 1.5
+                    }
+                }
+            );
+
             // Reflections on tracks (keeping as a subtle environmental detail)
             gsap.to('.track-reflection', {
                 opacity: 0.3,
@@ -64,9 +83,6 @@ function MonsoonRailways() {
                 repeat: -1,
                 yoyo: true
             });
-
-            // Text animations removed to use global smooth entry
-
 
         }, sceneRef);
 
@@ -131,17 +147,45 @@ function MonsoonRailways() {
                     <div className="track track-2"></div>
                     <div className="track-reflection"></div>
                 </div>
+
+                {/* Antigravity Mist for Rails */}
+                <Antigravity
+                    count={150}
+                    magnetRadius={20}
+                    waveSpeed={0.5}
+                    particleSize={0.8}
+                    color="#e0e6ed" // Mist blue-white
+                    opacity={0.15} // Very subtle
+                    rotationSpeed={0.1}
+                    particleShape="sphere"
+                    fieldStrength={5}
+                />
             </div>
 
             {/* Content */}
             <div className="scene-content">
-                <h2 className="scene-title railway-title">Monsoon & Railways</h2>
-                <p className="story-text railway-text">
-                    In the heart of the Western Ghats, the tracks wind through misty peaks.
-                    Sheets of rain fall over the ancient iron, while distant waterfalls
-                    surge with new life. Even in the height of the storm, the landscape
-                    possesses a haunting, metallic beauty.
-                </p>
+                <ScrollReveal
+                    containerClassName="scene-title railway-title"
+                    baseRotation={3}
+                    blurStrength={5}
+                >
+                    Monsoon & Railways
+                </ScrollReveal>
+
+                <div className="story-text railway-text">
+                    <ScrollReveal
+                        baseOpacity={0.1}
+                        baseRotation={-1}
+                        blurStrength={3}
+                        textClassName="story-paragraph"
+                    >
+                        In the heart of the Western Ghats, the tracks wind through misty peaks.
+                        Sheets of rain fall over the ancient iron, while distant waterfalls
+                        surge with new life. Even in the height of the storm, the landscape
+                        possesses a haunting, metallic beauty.
+                    </ScrollReveal>
+                </div>
+
                 <p className="interaction-hint">Click to trigger lightning</p>
             </div>
         </section>

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import ScrollReveal from '../components/ScrollReveal';
 import './FirstRain.css';
 
 import rainRipplesImg from '../assets/rain_ripples.png';
@@ -66,31 +67,19 @@ function FirstRain() {
                 }
             });
 
-            // Text animations
-            gsap.from('.rain-title', {
-                y: 70,
-                opacity: 0,
-                duration: 1.4,
-                ease: 'power3.out',
+            // Cinematic Camera: zoom on scroll
+            // Note: Moved inside context for proper cleanup
+            gsap.to('.rain-background', {
+                scale: 1.1,
                 scrollTrigger: {
                     trigger: scene,
-                    start: 'top 60%',
-                    toggleActions: 'play none none reverse'
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
                 }
             });
 
-            gsap.from('.rain-text', {
-                y: 50,
-                opacity: 0,
-                duration: 1.2,
-                delay: 0.3,
-                ease: 'power2.out',
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top 60%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
+            // Text animations are now handled by ScrollReveal
 
         }, sceneRef);
 
@@ -117,17 +106,6 @@ function FirstRain() {
 
         // Interaction: Create ripple
         createRipple(x, y);
-
-        // Cinematic Camera: zoom on scroll
-        gsap.to('.rain-background', {
-            scale: 1.1,
-            scrollTrigger: {
-                trigger: scene,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 1
-            }
-        });
     };
 
     const handleSceneClick = (e) => {
@@ -191,13 +169,28 @@ function FirstRain() {
 
             {/* Content */}
             <div className="scene-content">
-                <h2 className="scene-title rain-title">First Rain</h2>
-                <p className="story-text rain-text">
-                    The first drops fall, tentative and gentle. Each one a messenger of renewal.
-                    They tap against the earth, creating ripples that spread across still waters.
-                    The rain grows stronger as you witness its journey, transforming the landscape
-                    with every passing moment.
-                </p>
+                <ScrollReveal
+                    containerClassName="scene-title rain-title"
+                    baseRotation={-2}
+                    blurStrength={5}
+                >
+                    First Rain
+                </ScrollReveal>
+
+                <div className="story-text rain-text">
+                    <ScrollReveal
+                        baseOpacity={0.1}
+                        baseRotation={1}
+                        blurStrength={3}
+                        textClassName="story-paragraph"
+                    >
+                        The first drops fall, tentative and gentle. Each one a messenger of renewal.
+                        They tap against the earth, creating ripples that spread across still waters.
+                        The rain grows stronger as you witness its journey, transforming the landscape
+                        with every passing moment.
+                    </ScrollReveal>
+                </div>
+
                 <p className="interaction-hint">Move your cursor to create ripples</p>
             </div>
         </section>
