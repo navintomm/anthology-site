@@ -29,46 +29,8 @@ function Conclusion() {
                 }
             });
 
-            // Title animation
-            gsap.from('.conclusion-title', {
-                y: 80,
-                opacity: 0,
-                duration: 1.8,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top 70%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
+            // Text animations removed to use global smooth entry
 
-            // Subtitle stagger
-            gsap.from('.conclusion-subtitle', {
-                y: 40,
-                opacity: 0,
-                duration: 1.5,
-                delay: 0.5,
-                ease: 'power2.out',
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top 70%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
-
-            // Reflection paragraphs stagger
-            gsap.from('.reflection-paragraph', {
-                y: 30,
-                opacity: 0,
-                duration: 1.2,
-                stagger: 0.3,
-                ease: 'power2.out',
-                scrollTrigger: {
-                    trigger: messageRef.current,
-                    start: 'top 80%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
 
             // Ambient motion: Sunset Sky hue shift
             gsap.to('.calm-sky', {

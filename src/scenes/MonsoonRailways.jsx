@@ -65,31 +65,8 @@ function MonsoonRailways() {
                 yoyo: true
             });
 
-            // Text animations
-            gsap.from('.railway-title', {
-                y: 80,
-                opacity: 0,
-                duration: 1.5,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top 60%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
+            // Text animations removed to use global smooth entry
 
-            gsap.from('.railway-text', {
-                y: 50,
-                opacity: 0,
-                duration: 1.2,
-                delay: 0.4,
-                ease: 'power2.out',
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top 60%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
 
         }, sceneRef);
 

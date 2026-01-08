@@ -52,31 +52,8 @@ function BeforeMonsoon() {
                 }
             });
 
-            // Text animations
-            gsap.from('.before-title', {
-                y: 60,
-                opacity: 0,
-                duration: 1.2,
-                ease: 'power3.out',
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top 60%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
+            // Text animations removed to use global smooth entry
 
-            gsap.from('.before-text', {
-                y: 40,
-                opacity: 0,
-                duration: 1,
-                delay: 0.3,
-                ease: 'power2.out',
-                scrollTrigger: {
-                    trigger: scene,
-                    start: 'top 60%',
-                    toggleActions: 'play none none reverse'
-                }
-            });
 
             // Cinematic Camera: zoom on scroll
             gsap.to('.dry-earth-bg', {
